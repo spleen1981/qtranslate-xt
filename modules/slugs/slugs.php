@@ -31,6 +31,8 @@ register_uninstall_hook( QTRANSLATE_FILE, 'qts_uninstall' );
 // plugin init
 add_action( 'plugins_loaded', array( $qtranslate_slug, 'init' ) );
 
+add_filter( 'qtranslate_convert_url_before', 'qts_convert_url_before_cb', 10, 2 );
+
 ////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -46,6 +48,13 @@ function qts_get_url( $lang = false ) {
     global $qtranslate_slug;
 
     return $qtranslate_slug->get_current_url( $lang );
+}
+
+function qts_convert_url_before_cb( $url, $lang ) {
+    if ( empty( $url ) ) {
+        return qts_get_url( $lang );
+    }
+    return $url;
 }
 
 /**
